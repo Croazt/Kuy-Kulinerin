@@ -33,7 +33,7 @@
 
 ### Register User (POST /register)
 ***Request (body): JSON***
-
+**url : localhost:99/user/register**
     {
         “name”      : “Muhammad Fachry Noorchoolish Arif”,
         “email”     : “kuykulinerin@gmail.com”,
@@ -64,6 +64,8 @@
 
 ### Login User (POST /login)
 ***Request (Body): JSON***
+**url : localhost:99/user/login**
+
             
     {
         “email”     : “kuykulinerin@gmail.com”,
@@ -104,6 +106,7 @@
     }
 ### Update User (POST /)
 ***Request (body): JSON***
+**url : localhost:99/user/:id/update**
 
     {
         “nama”     : “AYOLAH”,
@@ -124,6 +127,12 @@
     {
         “success”: false,
         “message”: “Not valid email”
+    }
+
+    410:
+    {
+        “success”: false
+        “message”: “You are not recognized as %{id}” 
     }
 
     500:

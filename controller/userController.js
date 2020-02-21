@@ -70,44 +70,54 @@ const loginUser = async (req, res, next) =>{
 
 
 const upUser = async (req, res, next) =>{
-    const nama = req.body.nama
-    const email = req.body.email
-    const phon = req.body.phon
-    const username = req.body.username
-    const isEmail = validator.isEmail(email)
+    const id_user = req.user.username
     const id = req.params.id
-    var password = req.body.password
-    const [rows] = await db.query('select * from users where username = ?',
-    [id])
-    console.log(rows)
-    const isVerified = await bcrypt.compare(password, rows[0].password)
-    console.log(isVerified)
-    if(isVerified){1
-        if(isEmail){
-                db.query('update users set nama = ?, email = ?, phone= ?, username = ?',[nama,email,phon,username])
-                .then(()=>{
-                    res.status(202).json({
-                        "success" : true,
-                        "message" : "Update success"
+    console.log(id)
+    if(id_user === id){
+        const nama = req.body.nama
+        const email = req.body.email
+        const phon = req.body.phon
+        const username = req.body.username
+        const isEmail = validator.isEmail(email)
+        
+        var password = req.body.password
+        const [rows] = await db.query('select * from users where username = ?',
+        [id])
+        console.log(rows)
+        const isVerified = await bcrypt.compare(password, rows[0].password)
+        console.log(isVerified)
+        if(isVerified){1
+            if(isEmail){
+                    db.query('update users set nama = ?, email = ?, phone= ?, username = ?',[nama,email,phon,username])
+                    .then(()=>{
+                        res.status(202).json({
+                            "success" : true,
+                            "message" : "Update success"
+                        })
                     })
-                })
-                .catch((err)=>{
-                    res.status(500)
-                    res.json({
-                        "success" : false,
-                        "error" : err
+                    .catch((err)=>{
+                        res.status(500)
+                        res.json({
+                            "success" : false,
+                            "error" : err
+                        })
                     })
-                })
+            }else{
+                res.status(409)
+                const error = new Error("Not a valid email")
+                next(error)
+            }
         }else{
-            res.status(409)
-            const error = new Error("Not a valid email")
+            res.status()
+            const error = new Error("Password didn't match")
             next(error)
         }
     }else{
-        res.status()
-        const error = new Error("Password didn't match")
+        res.status(410)
+        const error = new Error("You are not recognized as " + id)
         next(error)
     }
+    
 }
 
 const reqUser = async (req,res,next)=>{
