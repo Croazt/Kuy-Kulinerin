@@ -33,6 +33,7 @@
 
 ### Register User (POST /register)
 ***Request (body): JSON***
+
 **url : localhost:99/user/register**
 
     {
