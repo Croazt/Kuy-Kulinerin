@@ -32,7 +32,7 @@
 ## User (/user)
 
 ### Register User (POST /register)
-**url : localhost:99/user/register**
+#### url : localhost:99/user/register
 ***Request (body): JSON***
 
     {
@@ -64,7 +64,7 @@
         }
 
 ### Login User (POST /login)
-**url : localhost:99/user/login**
+#### url : localhost:99/user/login
 ***Request (Body): JSON***
 
             
@@ -105,8 +105,9 @@
             “success” : false,
             “message” : “internal server error”
     }
+    
 ### Update User (POST /)
-#### url : localhost:99/user/:id/update**
+#### url : localhost:99/user/:id/update
 ***Request (body): JSON***
 
     {
