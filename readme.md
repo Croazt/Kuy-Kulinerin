@@ -106,7 +106,7 @@
             “message” : “internal server error”
     }
     
-### Update User (POST /)
+### Update User (POST /:id/update)
 #### url : localhost:99/user/:id/update
 ***Request (body): JSON***
 
