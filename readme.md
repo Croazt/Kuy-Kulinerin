@@ -32,9 +32,8 @@
 ## User (/user)
 
 ### Register User (POST /register)
-***Request (body): JSON***
-
 **url : localhost:99/user/register**
+***Request (body): JSON***
 
     {
         “name”      : “Muhammad Fachry Noorchoolish Arif”,
@@ -65,8 +64,8 @@
         }
 
 ### Login User (POST /login)
-***Request (Body): JSON***
 **url : localhost:99/user/login**
+***Request (Body): JSON***
 
             
     {
@@ -107,8 +106,8 @@
             “message” : “internal server error”
     }
 ### Update User (POST /)
-***Request (body): JSON***
 **url : localhost:99/user/:id/update**
+***Request (body): JSON***
 
     {
         “nama”     : “AYOLAH”,
