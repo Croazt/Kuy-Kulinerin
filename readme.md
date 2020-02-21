@@ -34,6 +34,7 @@
 ### Register User (POST /register)
 ***Request (body): JSON***
 **url : localhost:99/user/register**
+
     {
         “name”      : “Muhammad Fachry Noorchoolish Arif”,
         “email”     : “kuykulinerin@gmail.com”,
