@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const userRouter = require('./userRouter')
 const placeRouter = require('./placeRouter')
+const adminRouter = require('./adminRouter')
 
 router.get('/', (req,res)=>{
     res.send('Fachry Lolos BCC');
@@ -8,6 +9,7 @@ router.get('/', (req,res)=>{
 
 router.use('/user',userRouter)
 router.use('/place',placeRouter)
+router.use('/admin',adminRouter)
 router.use(notFound);
 router.use(errorHandler)
 

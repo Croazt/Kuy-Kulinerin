@@ -8,7 +8,6 @@ module.exports= {
         if(authHeader){
             console.log('get in middleware')
             const token = authHeader.split(' ')[1]
-            console.log(token)
             if(token){
                 try{
                     const payload = await jwt.verify(token,JWT_KEY)
@@ -30,7 +29,7 @@ module.exports= {
 
     checkadmin : async(req,res,next)=>{
         const authHeader = req.headers.authorization
-        if(autHeader){
+        if(authHeader){
             console.log('get in middleware')
             const token = authHeader.split(' ')[1]
             if(token){
