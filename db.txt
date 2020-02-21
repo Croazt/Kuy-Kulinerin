@@ -1,0 +1,8 @@
+create table `user`(
+    id integer unique auto_increment,
+    nama varchar(40),
+    email varchar(30) unique,
+    username varchar(30) primary key,
+    password varchar(100),
+    phone varchar(20) unique
+);

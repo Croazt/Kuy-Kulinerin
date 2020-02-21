@@ -1,0 +1,20 @@
+{
+  "name": "belajar3",
+  "version": "1.0.0",
+  "description": "Belajar Untuk 3 kalinya",
+  "main": "index.js",
+  "author": "Croazt",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.1.0",
+    "nodemon": "^2.0.2",
+    "randomstring": "^1.1.5",
+    "validator": "^12.2.0"
+  }
+}
