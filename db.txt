@@ -3,6 +3,34 @@ create table `user`(
     nama varchar(40),
     email varchar(30) unique,
     username varchar(30) primary key,
-    password varchar(100),
+    password varchar(500),
     phone varchar(20) unique
 );
+
+create table `places`(
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    nama text,
+    location text,
+    rating double,
+    coworking int(1),
+    cafe int(1),
+    restaurant int(1),
+    googlemap text,
+    lowprice int,
+    highprice int,
+    opentime time,
+    closetime time,
+    description text,
+    recomended int(1),
+    image text,
+    id_users varchar(40),
+    FOREIGN KEY (id_users) REFERENCES users(id)
+);
+
+create table `transactions`(
+ id INTEGER primary key auto_increment,
+ id_places INTEGER not null,
+ nama text,
+harga BIGINT,
+  FOREIGN KEY (id_places) REFERENCES places(id)
+)

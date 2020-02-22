@@ -1,6 +1,85 @@
 const db = require('../database')
+const multer = require("multer");
+const path = require("path");
+const randomstring = require("randomstring");
+
+const diskStorage = multer.diskStorage({
+  destination: "./resource/image",
+  filename: function (req, file, cb) {
+    const randomPart = randomstring.generate(8); // use whatever random you want.
+    const extension = file.mimetype.split('/')[1];
+    cb(null, 'PlaceImage-'+ randomPart + `.${extension}`)
+  }
+});
 
 module.exports={
+    upload: multer({ storage: diskStorage }),
+    createPlace: async(req,res,next)=>{
+        if (req.file) {
+            console.log('Uploading file...');
+            var filename = req.file.filename;
+            var uploadStatus = 'File Uploaded Successfully';
+        } else {
+            console.log('No File Uploaded');
+            var filename = 'FILE NOT UPLOADED';
+            var uploadStatus = 'File Upload Failed';
+        }
+        const role_user = req.user.role
+        const nama = req.body.nama;
+        const location = req.body.location;
+        const rating = req.body.rating;
+        const coworking = req.body.coworking;
+        const restaurant = req.body.restaurant;
+        const cafe = req.body.cafe;
+        const image = "resource/image/"+filename;
+        const googlemap = req.body.googlemap;
+        const lowprice =req.body.lowprice;
+        const highprice =req.body.highprice;
+        const opentime = req.body.opentime;
+        const closetime = req.body.closetime;
+        const description = req.body.description;
+        const recomend = 0;
+        const id_users = req.params.id_users
+        console.log(role_user)
+        if(role_user === 0){
+            db.query(
+                'insert into places( nama, location, rating, coworking, restaurant, cafe, image, googlemap, lowprice, highprice, opentime, closetime, description, recomended,id_users) value ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)',[nama,location,rating,coworking,restaurant,cafe,image,googlemap,lowprice,highprice,opentime,closetime,description,recomend,id_users])
+            .then(()=>{
+                res.json({
+                    "success" : "true",
+                    "message" : "berhasil upload",
+                    status: uploadStatus, 
+                    filename: `Name Of File: ${filename}` 
+                })
+            }).catch((err)=>{
+                console.log(err)
+                next(err)
+            })
+        }else if(role_user === 2){
+            const [rows] = await db.query('select * from places where id_users = ?',[id_users])
+            if(rows.length === 0){
+                db.query(
+                    'insert into places( nama, location, rating, coworking, restaurant, cafe, image, googlemap, lowprice, highprice, opentime, closetime, description, recomended,id_users) value ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)',[nama,location,rating,coworking,restaurant,cafe,image,googlemap,lowprice,highprice,opentime,closetime,description,recomend,id_users])
+                .then(()=>{
+                    res.json({
+                        "success" : "true",
+                        "message" : "berhasil upload",
+                        status: uploadStatus, 
+                        filename: `Name Of File: ${filename}` 
+                    })
+                }).catch((err)=>{
+                    console.log(err)
+                    next(err)
+                })
+            }
+            else{
+                res.status(403)
+                const err = new Error("YOU CANNOT ADD MORE PLACE ANYMORE")
+                next(err)
+            }
+        }
+        
+    },
 
     
     getAllPlaceBy: async(req,res,next)=>{
@@ -13,7 +92,6 @@ module.exports={
         try{
             if(coworking === 1 || cafe === 1||restaurant === 1){
                 const [rows] = await db.query("select id, nama, alamat,lowprice,highprice,opentime,closetime, image from places WHERE coworking = ? and cafe=? andrestaurant = ?and nama LIKE '%"+ keyword+"or alamat LIKE '%"+ keyword+"%'" + "order by "+ input + " " + order, [coworking,cafe,restaurant])
-                
                 res.json({
                     "success" : "true",
                     "data" : rows

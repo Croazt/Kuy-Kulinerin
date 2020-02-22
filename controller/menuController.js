@@ -3,6 +3,7 @@ const db = require('../database')
 module.exports={
     createMenu : async(req,res,next)=>{
         const place_id = req.params.id_place
+        console.log(place_id)
         const nama = req.body.nama
         const harga = req.body.harga
         db.query('insert into transactions(id_places,nama,harga) values(?,?,?)',[place_id,nama,harga])
@@ -29,7 +30,7 @@ module.exports={
         .then(()=>{
             res.json({
                 "success" : true,
-                "message" : "Register success"
+                "message" : "Update success"
             })
         })
         .catch((err)=>{

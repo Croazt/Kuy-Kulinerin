@@ -5,7 +5,7 @@
 - id: Int
 - nama: String
 - email: String
-- username : String Primary key
+- username : String
 - password: String
 - phone : String
 - role : Int
@@ -27,6 +27,21 @@
 - image : String
 - alamat : String
 - recomended : int
+
+## Admin
+- id: Int
+- nama: String
+- email: String
+- username : String
+- password: String
+- phone : String
+- role : Int
+
+## Menu
+- id : Int
+- id_places : Int
+- nama : String
+- harga : BIGINT
 
 # ENDPOINT
 ## User (/user)
@@ -81,6 +96,14 @@
         “success” : true,
         “token” : “12c312c039n089qc0sa”,
         “message” : “YOU LOGIN AS USER”
+        
+    }
+    or
+    202 :
+    {
+        “success” : true,
+        “token” : “12c312c039n089qc0sa”,
+        “message” : “YOU LOGIN AS ADMIN”
         
     }
     
@@ -142,4 +165,146 @@
         “success” : false,             
         “message” : “internal server error”
     }
+
+### Get User (POST /:id)
+#### url : localhost:99/user/:id
+
+***Response: JSON***
+
+    200:
+        {
+            "success" : true,
+            "data" :[
+                    {
+                        “id”: 1,
+                        “nama”: “Fachry”,
+                        “username”: “Croazt”,
+                        “email”: “ayaiayai@gmail.com”,
+                        “phone”: “085340907028”,
+                    }
+                ]
+        }
+
+    500:    
+        {
+            “success”   : false,
+            “message”   : “internal server error”
+        }
+
+## Admin (/Admin)
+
+### Register Admin (POST /registerAdmin)
+#### url : localhost:99/Admin/registerAdmin
+***Request (body): JSON***
+
+    {
+        “name”      : “Muhammad Fachry Noorchoolish Arif”,
+        “email”     : “kuykulinerin@gmail.com”,
+        “username”  : “Croazt”,
+        “Phone”     : “085340907028”,
+        “password”  : “Yoimen99”
+    }
+
+***Response: JSON***
+
+    200:
+        {
+            “success”   : true,
+            “message”   : “registesuccess”
+        }
+
+    409:    
+        {
+            “success”   : false,
+            “message”   : “Email already registered”
+        } 
+
+    500:    
+        {
+            “success”   : false,
+            “message”   : “internal server error”
+        }
+
+## Place (/place)
+## Create Place
+
+***Request (header): (required) Authorization: Bearer <JWT_TOKEN>***
+
+## Menu (/place)
+
+### Create Menu (POST /:id_place/createmenu)
+#### url : localhost:99/place/:id_place/createmenu
+
+***Request (params) : (required) id_place => id_places***
+***Request (body): JSON***
+
+    {
+        “nama” : “Makanan Enak Yuhuu”,
+        “harga”   :  100000
+    }
+
+***Response: JSON***
+
+    200:
+        {
+            "success" : true,
+            "message" : "Register success"
+        }
+
+    500:    
+        {
+            “success”   : false,
+            “message”   : “internal server error”
+        }
+
+### Update Menu (POST /:id_place/menu/:id/update)
+#### url : localhost:99/place/:id_place/menu/:id/update
+***Request (body): JSON***
+
+    {
+        “nama” : “Makanan Enak Yuhuu”,
+        “harga”   :  100000
+    }
+
+***Response: JSON***
+
+    200:
+        {
+            "success" : true,
+            "message" : "Update success"
+        }
+
+    500:    
+        {
+            “success”   : false,
+            “message”   : “internal server error”
+        }
+
+### Get All Menu Menu (POST /:id_place/menu/)
+#### url : localhost:99/place/:id_place/menu/
+
+***Response: JSON***
+
+    200:
+        {
+            "success" : true,
+            "data" :[
+                    {
+                        “id”: 1,
+                        “nama”: “Makanan Enak Yuhuu”,
+                        “harga”: 100000
+                    },
+                    {
+                        “id”: 2,
+                        “nama”: “Makanan Enak Yuhuu”,
+                        “harga”: 100000
+                    }
+                ] 
+        }
+
+    500:    
+        {
+            “success”   : false,
+            “message”   : “internal server error”
+        }
 
