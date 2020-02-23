@@ -3,6 +3,7 @@ const userRouter = require('./userRouter')
 const placeRouter = require('./placeRouter')
 const adminRouter = require('./adminRouter')
 const menuRouter = require('./menuRouter')
+const sellerRouter = require('./sellerRouter')
 
 router.get('/', (req,res)=>{
     res.send('Fachry Lolos BCC');
@@ -11,7 +12,8 @@ router.get('/', (req,res)=>{
 router.use('/user',userRouter)
 router.use('/place',placeRouter)
 router.use('/place',menuRouter)
-router.use('/admin',adminRouter)
+router.use('/admin',adminRouter);
+router.use('/seller',sellerRouter)
 router.use(notFound);
 router.use(errorHandler)
 

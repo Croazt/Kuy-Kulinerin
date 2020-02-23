@@ -1,36 +1,39 @@
-create table `user`(
+create table `users`(
     id integer unique auto_increment,
-    nama varchar(40),
-    email varchar(30) unique,
-    username varchar(30) primary key,
-    password varchar(500),
-    phone varchar(20) unique
+    nama varchar(40) not null,
+    email varchar(30) unique not null,
+    username varchar(30) primary key not null,
+    password varchar(500) not null,
+    phone varchar(20) unique not null,
+    role int(1) not null,
+    superadmin int(1) not null,
+    balance BIGINT not null
 );
 
 create table `places`(
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    nama text,
-    location text,
-    rating double,
-    coworking int(1),
-    cafe int(1),
-    restaurant int(1),
+    nama text not null,
+    location text not null,
+    rating double not null,
+    coworking int(1) not null,
+    cafe int(1) not null,
+    restaurant int(1) not null,
     googlemap text,
-    lowprice int,
-    highprice int,
-    opentime time,
-    closetime time,
+    lowprice int not null,
+    highprice int not null,
+    opentime time not null,
+    closetime time not null,
     description text,
-    recomended int(1),
+    recomended int(1) not null,
     image text,
-    id_users varchar(40),
-    FOREIGN KEY (id_users) REFERENCES users(id)
+    id_users varchar(40) not null,
+    FOREIGN KEY (id_users) REFERENCES users(id) on delete cascade
 );
 
 create table `transactions`(
  id INTEGER primary key auto_increment,
  id_places INTEGER not null,
- nama text,
-harga BIGINT,
-  FOREIGN KEY (id_places) REFERENCES places(id)
+ nama text not null,
+harga BIGINT not null,
+  FOREIGN KEY (id_places) REFERENCES places(id) on delete cascade
 )

@@ -24,7 +24,8 @@ const login = async (req,pass,res,next)=>{
                 "id_user": user.id,
                 "email": user.email,
                 "username" : user.username,
-                "role" : user.role
+                "role" : user.role,
+                "superadmin" : user.superadmin
             }, ADMIN_KEY)
 
             if(user.role === 0){

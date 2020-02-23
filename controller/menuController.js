@@ -6,7 +6,8 @@ module.exports={
         console.log(place_id)
         const nama = req.body.nama
         const harga = req.body.harga
-        db.query('insert into transactions(id_places,nama,harga) values(?,?,?)',[place_id,nama,harga])
+        const username = req.user.username
+        db.query('insert into transactions(id_places,nama,harga,id_users) values(?,?,?,?)',[place_id,nama,harga,username])
         .then(()=>{
             res.json({
                 "success" : true,

@@ -7,4 +7,5 @@ router.get('/', (req,res)=>{
 })
 
 router.post('/registerAdmin',checkadmin, adminController.regAdmin)
+router.post('/deleteUser',checkadmin, adminController.deleteUsers)
 module.exports = router

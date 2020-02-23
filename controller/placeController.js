@@ -39,11 +39,11 @@ module.exports={
         const closetime = req.body.closetime;
         const description = req.body.description;
         const recomend = 0;
-        const id_users = req.params.id_users
+        const username = req.user.username
         console.log(role_user)
         if(role_user === 0){
             db.query(
-                'insert into places( nama, location, rating, coworking, restaurant, cafe, image, googlemap, lowprice, highprice, opentime, closetime, description, recomended,id_users) value ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)',[nama,location,rating,coworking,restaurant,cafe,image,googlemap,lowprice,highprice,opentime,closetime,description,recomend,id_users])
+                'insert into places( nama, location, rating, coworking, restaurant, cafe, image, googlemap, lowprice, highprice, opentime, closetime, description, recomended,id_users) value ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)',[nama,location,rating,coworking,restaurant,cafe,image,googlemap,lowprice,highprice,opentime,closetime,description,recomend,username])
             .then(()=>{
                 res.json({
                     "success" : "true",
@@ -56,10 +56,10 @@ module.exports={
                 next(err)
             })
         }else if(role_user === 2){
-            const [rows] = await db.query('select * from places where id_users = ?',[id_users])
+            const [rows] = await db.query('select * from places where id_users = ?',[username])
             if(rows.length === 0){
                 db.query(
-                    'insert into places( nama, location, rating, coworking, restaurant, cafe, image, googlemap, lowprice, highprice, opentime, closetime, description, recomended,id_users) value ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)',[nama,location,rating,coworking,restaurant,cafe,image,googlemap,lowprice,highprice,opentime,closetime,description,recomend,id_users])
+                    'insert into places( nama, location, rating, coworking, restaurant, cafe, image, googlemap, lowprice, highprice, opentime, closetime, description, recomended,id_users) value ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)',[nama,location,rating,coworking,restaurant,cafe,image,googlemap,lowprice,highprice,opentime,closetime,description,recomend,username])
                 .then(()=>{
                     res.json({
                         "success" : "true",
@@ -91,13 +91,13 @@ module.exports={
         const cafe = req.body.cafe;
         try{
             if(coworking === 1 || cafe === 1||restaurant === 1){
-                const [rows] = await db.query("select id, nama, alamat,lowprice,highprice,opentime,closetime, image from places WHERE coworking = ? and cafe=? andrestaurant = ?and nama LIKE '%"+ keyword+"or alamat LIKE '%"+ keyword+"%'" + "order by "+ input + " " + order, [coworking,cafe,restaurant])
+                const [rows] = await db.query("select id, nama, location,lowprice,highprice,opentime,closetime, image, rating from places WHERE coworking = ? and cafe= ? and restaurant = ? and nama LIKE '%"+ keyword+"%'"+ "or location LIKE '%"+ keyword+"%'" + "order by "+ input + " " + order, [coworking,cafe,restaurant])
                 res.json({
                     "success" : "true",
                     "data" : rows
                 })
             }else{
-                const [rows] = await db.query("select id, nama alamat,lowprice,highprice,opentime,closetime, image from places WHERE nama LIKE '%"+ keyword+"%'" + "order by "+ input + " " + order)
+                const [rows] = await db.query("select id, nama location,lowprice,highprice,opentime,closetime, image, rating from places WHERE nama LIKE '%"+ keyword+"%'" + "order by "+ input + " " + order)
 
                 res.json({
                     "success" : "true",
@@ -113,8 +113,8 @@ module.exports={
     },
     getRecomended : async (req,res,next)=>{
         try{
-            const [rows] = await db.query('select id, nama, rating, kuliner, alamat, image from places where recomended = 1')
-            const [rows2] = await db.query('select id, nama, rating, kuliner, alamat, image from places where recomended = 0 order by rand()')
+            const [rows] = await db.query('select id, nama, rating, location, image from places where recomended = 1')
+            const [rows2] = await db.query('select id, nama, rating, location, image from places where recomended = 0 order by rand()')
             res.json({
                 "success" : "true",
                 "data" : rows,
@@ -141,6 +141,56 @@ module.exports={
             next(error)
         }
 
+    },
+
+    delPlaceByid : async (req,res,next)=>{
+        const user_id = req.user.username
+        const id = req.params.id;
+        const id_users = req.params.id_user
+        const role = req.user.role
+        console.log(user_id)
+        const [rows] = await db.query('select * from places where id = ?',[id])
+        if(rows.length != 0){
+            if(role === 0){
+                db.query('delete from places where id = ? and id_users = ?',[id,id_users])
+                .then(()=>{
+                    res.json({
+                        "success" : true,
+                        "message" : "Place with id = "+ id +" and id_users = "+id_users+" has been deleted"
+                    })
+                })
+                .catch(()=>{
+                    res.status(404)
+                    const error = new Error("Place Not Found")
+                    next(error)              
+                })
+            }else if(role === 2){
+                if(id_users === user_id){
+                    db.query('delete from places where id = ? and id_users = ?',[id,id_users])
+                    .then(()=>{
+                        res.json({
+                            "success" : true,
+                            "message" : "Place with id = "+ id +" and id_users = "+id_users+" has been deleted"
+                        })
+                    })
+                    .catch(()=>{
+                        res.status(404)
+                        const error = new Error("Place Not Found")
+                        next(error)              
+                    })
+                }else{
+                    res.status(403)
+                    const error = new Error("You are not place owner")
+                    next(error)       
+                }
+                
+            }
+    
+        }else{
+            res.status(404)
+            const error = new Error("Place Not Found")
+            next(error)
+        }
     },
     
 }

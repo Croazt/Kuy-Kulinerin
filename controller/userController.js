@@ -37,7 +37,7 @@ const regUser = async (req,res,next)=>{
         }     
         else{
             res.status(409)
-            const error = new Error("Email Already Registered")
+            const error = new Error("User Already Registered")
             next(error)
         }
     }else{
@@ -46,7 +46,6 @@ const regUser = async (req,res,next)=>{
         next(error)
     }
 }
-
 
 
 const loginUser = async (req, res, next) =>{
@@ -62,6 +61,10 @@ const loginUser = async (req, res, next) =>{
         const error = new Error("You seems not registered yet")
         next(error)
     }else if(username==null||email==null){
+        res.status(406)
+        const error = new Error("Please input valid email or username")
+        next(error)
+    }else{
         res.status(406)
         const error = new Error("Please input valid email or username")
         next(error)
@@ -86,9 +89,9 @@ const upUser = async (req, res, next) =>{
         console.log(rows)
         const isVerified = await bcrypt.compare(password, rows[0].password)
         console.log(isVerified)
-        if(isVerified){1
+        if(isVerified){
             if(isEmail){
-                    db.query('update users set nama = ?, email = ?, phone= ?, username = ?',[nama,email,phon,username])
+                    db.query('update users set nama = ?, email = ?, phone= ?, username = ? where username = ?',[nama,email,phon,username,id_user])
                     .then(()=>{
                         res.status(202).json({
                             "success" : true,
@@ -133,14 +136,29 @@ const reqUser = async (req,res,next)=>{
         const error = new error("user not found");
         next(error);
     }
+}
 
+const delUser = async (req,res,next)=>{
+    const id = req.params.id;
+    const [rows] = await db.query('select id,nama,username, email,phone from users where username = ?',[id]);
+    if(rows.length>0){
+        res.json({
+            'success' : true,
+            'users' : rows[0]
+        })
+    }else{
+        res.status(404);
+        const error = new error("user not found");
+        next(error);
+    }
 }
 
 const userController = {
     regUser,
     loginUser,
     upUser,
-    reqUser
+    reqUser,
+    delUser
 }
 
 module.exports = userController
