@@ -40,7 +40,7 @@ module.exports={
         const description = req.body.description;
         const recomend = 0;
         const username = req.user.username
-        console.log(role_user)
+        console.log(username)
         if(role_user === 0){
             db.query(
                 'insert into places( nama, location, rating, coworking, restaurant, cafe, image, googlemap, lowprice, highprice, opentime, closetime, description, recomended,id_users) value ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)',[nama,location,rating,coworking,restaurant,cafe,image,googlemap,lowprice,highprice,opentime,closetime,description,recomend,username])
@@ -118,7 +118,7 @@ module.exports={
             res.json({
                 "success" : "true",
                 "data" : rows,
-                "data2" : rows2
+                "data2" : rows2      
             })
         }
         catch(err){

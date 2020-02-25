@@ -11,7 +11,7 @@ create table `users`(
 );
 
 create table `places`(
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id int PRIMARY KEY AUTO_INCREMENT,
     nama text not null,
     location text not null,
     rating double not null,
@@ -27,13 +27,42 @@ create table `places`(
     recomended int(1) not null,
     image text,
     id_users varchar(40) not null,
-    FOREIGN KEY (id_users) REFERENCES users(id) on delete cascade
+    createdAt timestamp default CURRENT_TIMESTAMP,
+    updatedAt timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_users) REFERENCES users(username) on delete cascade
 );
 
+create table `menus`(
+  id INTEGER primary key auto_increment,
+  id_places INTEGER not null,
+  nama text not null,
+      price BIGINT not null,
+      FOREIGN KEY (id_places) REFERENCES places(id) on delete cascade
+ )
+
 create table `transactions`(
- id INTEGER primary key auto_increment,
- id_places INTEGER not null,
- nama text not null,
-harga BIGINT not null,
-  FOREIGN KEY (id_places) REFERENCES places(id) on delete cascade
+    id INT primary key not null auto_increment,
+    id_users varchar(40) not null,
+    id_places int not null,
+    price BIGINT not null,
+    createdAt timestamp default CURRENT_TIMESTAMP,
+    updatedAt timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_places) REFERENCES places(id) on delete cascade,
+    FOREIGN KEY (id_users) REFERENCES users(username) on delete cascade
+)
+
+create table `details`(
+  id INT primary key not null auto_increment,
+    id_users varchar(40) not null,
+    id_places int not null,
+    id_menu int not null,
+    id_transaction int not null,
+    price BIGINT not null,
+  namamenu text not null,
+    createdAt timestamp default CURRENT_TIMESTAMP,
+    updatedAt timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_places) REFERENCES places(id) on delete cascade,
+    FOREIGN KEY (id_users) REFERENCES users(username) on delete cascade,
+    FOREIGN KEY (id_menu) REFERENCES menus(id) on delete cascade,
+    FOREIGN KEY (id_transaction) REFERENCES transactions(id) on delete cascade
 )

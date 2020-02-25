@@ -7,7 +7,7 @@ module.exports={
         const nama = req.body.nama
         const harga = req.body.harga
         const username = req.user.username
-        db.query('insert into transactions(id_places,nama,harga,id_users) values(?,?,?,?)',[place_id,nama,harga,username])
+        db.query('insert into menus(id_places,nama,price,id_user) values(?,?,?,?)',[place_id,nama,harga,username])
         .then(()=>{
             res.json({
                 "success" : true,
@@ -27,7 +27,7 @@ module.exports={
         const id = req.params.id
         const nama = req.body.nama
         const harga = req.body.harga
-        db.query('update transactions SET nama = ?, harga = ?   where id_places = ? and id = ?',[nama,harga,id_place,id])
+        db.query('update menus SET nama = ?, price = ?   where id_places = ? and id = ?',[nama,harga,id_place,id])
         .then(()=>{
             res.json({
                 "success" : true,
@@ -52,7 +52,7 @@ module.exports={
             input = input
         }
         try{
-            const [rows] = await db.query('select id, nama, harga from transactions where id_places = ? order by '+ input ,[id_place])
+            const [rows] = await db.query('select id, nama, price from menus where id_places = ? order by '+ input ,[id_place])
             res.json({
                 "success" : true,
                 "data" : rows
