@@ -58,6 +58,5 @@ const login = async (req,pass,res,next)=>{
 
 const userServices={
     login
-
 } 
 module.exports = userServices
