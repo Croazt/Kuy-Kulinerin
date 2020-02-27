@@ -4,7 +4,6 @@ const validator = require('validator')
 const jwt = require('jsonwebtoken')
 const JWT_KEY = process.env.JWT_KEY
 const  ADMIN_KEY = process.env.ADMIN_KEY
-const  SELLER_KEY = process.env.SELLER_KEY
 const login = async (req,pass,res,next)=>{
     const user = req
     const password = pass
@@ -14,20 +13,15 @@ const login = async (req,pass,res,next)=>{
             "id_user": user.id,
             "email": user.email,
             "username" : user.username,
+            "role" : user.role,
+            "superadmin" : user.superadmin
         }
             var token;
             var admin = "YOU LOGIN AS USER"
         if(user.role === 1){
             token = await jwt.sign(payload, JWT_KEY)
         }else if(user.role === 0 || user.role === 2){
-            token = await jwt.sign(payload = {
-                "id_user": user.id,
-                "email": user.email,
-                "username" : user.username,
-                "role" : user.role,
-                "superadmin" : user.superadmin
-            }, ADMIN_KEY)
-
+            token = await jwt.sign(payload, ADMIN_KEY)
             if(user.role === 0){
                 admin = "YOU LOGIN AS ADMIN"
             }else if(user.role === 2){

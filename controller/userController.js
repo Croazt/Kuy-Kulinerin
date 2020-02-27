@@ -7,17 +7,11 @@ const JWT_KEY = process.env.JWT_KEY
 const  ADMIN_KEY = process.env.ADMIN_KEY
 const login = require('../services/userServices')
 
-const regUser = async (req,res,next)=>{ 
-    const nama = req.body.nama
-    const email = req.body.email
-    const phone = req.body.phone
-    const username = req.body.username
-    const isEmail = validator.isEmail(email)
-    if(isEmail){
+const regUser = async (req,res,next)=>{
+    const {email,password,phone,username,nama} = req.value.body
         const [rows] = await db.query('select * from users where email = ? or  username = ? or phone = ? limit 1',[email,username,phone])
         if(rows.length == 0){
             //daftar
-            const password = req.body.password
             const role = 1;
             const hashedPassword = await bcrypt.hash(password, 11)
             db.query('insert into users(nama, email, password,phone,username,role) values ( ?, ?, ?, ?, ? ,?)',[nama,email,hashedPassword,phone,username,role])
@@ -28,8 +22,7 @@ const regUser = async (req,res,next)=>{
                 })
             })
             .catch((err)=>{
-                res.status(500)
-                res.json({
+                res.status(500).json({
                     "success" : false,
                     "error" : err
                 })
@@ -40,11 +33,6 @@ const regUser = async (req,res,next)=>{
             const error = new Error("User Already Registered")
             next(error)
         }
-    }else{
-        res.status(409)
-        const error = new Error("Not a valid email")
-        next(error)
-    }
 }
 
 
@@ -73,51 +61,41 @@ const loginUser = async (req, res, next) =>{
 
 
 const upUser = async (req, res, next) =>{
-    const id_user = req.user.username
-    const id = req.params.id
-    console.log(id)
-    if(id_user === id){
-        const nama = req.body.nama
-        const email = req.body.email
-        const phon = req.body.phon
-        const username = req.body.username
-        const isEmail = validator.isEmail(email)
-        
-        var password = req.body.password
-        const [rows] = await db.query('select * from users where username = ?',
-        [id])
+    const [rows] = await db.query('select * from users where username = ?',
+    [req.params.id])
+    if(rows.length != 0){
+        const id_user = req.user.username
+    if(id_user === req.params.id){
+        const {email,password,phone,username,nama} = req.value.body
         console.log(rows)
-        const isVerified = await bcrypt.compare(password, rows[0].password)
-        console.log(isVerified)
-        if(isVerified){
-            if(isEmail){
-                    db.query('update users set nama = ?, email = ?, phone= ?, username = ? where username = ?',[nama,email,phon,username,id_user])
-                    .then(()=>{
-                        res.status(202).json({
-                            "success" : true,
-                            "message" : "Update success"
+            const isVerified = await bcrypt.compare(password, rows[0].password)
+            if(isVerified){
+             db.query('update users set nama = ?, email = ?, phone= ?, username = ? where username = ?',[nama,email,phone,username,id_user])
+                .then(()=>{
+                    res.status(202).json({
+                        "success" : true,
+                        "message" : "Update success"
                         })
                     })
                     .catch((err)=>{
-                        res.status(500)
-                        res.json({
+                        res.status(500).json({
                             "success" : false,
                             "error" : err
                         })
                     })
             }else{
-                res.status(409)
-                const error = new Error("Not a valid email")
+                res.status()
+                const error = new Error("Password didn't match")
                 next(error)
             }
-        }else{
-            res.status()
-            const error = new Error("Password didn't match")
-            next(error)
-        }
     }else{
         res.status(410)
-        const error = new Error("You are not recognized as " + id)
+        const error = new Error("You are not recognized as " + req.params.id)
+        next(error)
+    }
+    }else{
+        res.status()
+        const error = new Error("User not Found")
         next(error)
     }
     

@@ -10,7 +10,15 @@ module.exports= {
             const token = authHeader.split(' ')[1]
             if(token){
                 try{
-                    const payload = await jwt.verify(token,JWT_KEY)
+                    const payload = await jwt.verify(token,JWT_KEY,function(err, decoded) {
+                        if (err) {
+                            res.json({
+                                "err" : err
+                            })
+                        }
+                        
+                        return decoded
+                    })
                     if(payload){
                         req.user = payload
                         next()
@@ -34,7 +42,14 @@ module.exports= {
             const token = authHeader.split(' ')[1]
             if(token){
                 try{
-                    const payload = await jwt.verify(token,ADMIN_KEY)
+                    const payload = await jwt.verify(token,ADMIN_KEY,function(err, decoded) {
+                        if (err) {
+                            res.json({
+                                "err" : err
+                            })
+                        }
+                        return decoded
+                    })
                     if(payload){
                         req.user = payload;
                         next()
