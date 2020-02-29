@@ -203,7 +203,7 @@ const reqUser = async (req, res, next) => {
     });
   } else {
     res.status(404);
-    const error = new error("user not found");
+    const error = new Error("user not found");
     next(error);
   }
 };

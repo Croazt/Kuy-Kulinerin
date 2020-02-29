@@ -646,7 +646,7 @@
         }
 
 
-### Delete Place By admin (POST /deleteplace/:id)
+### Delete Place By admin (DELETE /deleteplace/:id)
 
 **_Request (header): (required) authorization: Bearer <ADMIN_TOKEN>_**
 
@@ -671,7 +671,7 @@
     404:
         {
             “success”   : false,
-            “message”   : “User not found”
+            “message”   : “Place not found”
         }
 
 
@@ -681,7 +681,42 @@
             “message”   : “internal server error”
         }
 
-        
+
+### Get Place By id (GET /:id)
+
+**_Request (header): (required) authorization: Bearer <ADMIN_TOKEN>_**
+
+#### url : localhost:99/place/:id
+
+**_Request (params) : (required) id_**
+
+**_Response: JSON_**
+
+    200:
+        {
+            "success" : true,
+            "Message" : "Place with id = "+ id +" has been deleted"
+        }
+
+    403:
+        {
+            “success”   : false,
+            “message”   : "You are not place owner"
+        }
+
+    404:
+        {
+            “success”   : false,
+            “message”   : “Place not found”
+        }
+
+
+    500:
+        {
+            “success”   : false,
+            “message”   : “internal server error”
+        }
+
 
         
 #### url : localhost:99/place/:id_place/createmenu
