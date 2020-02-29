@@ -33,6 +33,7 @@ module.exports={
         
         
     },
+    
     updateMenu : async(req,res,next)=>{
         const id_place = req.params.id_place
         const id = req.params.id
@@ -82,4 +83,5 @@ module.exports={
             next(err)
         }
     },
+
 }

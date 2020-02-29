@@ -595,6 +595,8 @@
 
 ## Create Place (POST /createplace)
 
+**_Request (header): (required) authorization: Bearer <ADMIN_TOKEN>_**
+
 #### url : localhost:99/place/createplace
 
 **_Request (body): MULTIPART_**
@@ -684,24 +686,39 @@
 
 ### Get Place By id (GET /:id)
 
-**_Request (header): (required) authorization: Bearer <ADMIN_TOKEN>_**
-
 #### url : localhost:99/place/:id
 
 **_Request (params) : (required) id_**
+
+**_Request (body): JSON_**
+
+    {
+        “input” : “rating”,
+        “order” : “ASC”,
+        “keyword” : “makan”,
+        “coworking” : 1,
+        “restaurant” : 1,
+        “cafe” : 1
+    }
+
 
 **_Response: JSON_**
 
     200:
         {
             "success" : true,
-            "Message" : "Place with id = "+ id +" has been deleted"
-        }
-
-    403:
-        {
-            “success”   : false,
-            “message”   : "You are not place owner"
+            "data": [
+                    “nama” : “Bakso Damas”,
+                    “rating” : 4.5,
+                    “coworking” : 1,
+                    “restaurant” : 1,
+                    “cafe” : 1
+                    “googlemap” : “https://www.google.com/maps/place/Bakso+Damas/@-7.952639,112.6079458,15z/data=!4m5!3m4!1s0x2dd629e12fb08173:0x40ea6973b3979085!8m2!3d-7.9384615!4d112.625294”,
+                    “location” : “Jl. Soekarno - Hatta No.75-74, Mojolangu, Kec. Lowokwaru, Kota Malang, Jawa Timur 65142”,
+                    “opentime”: “”06:00:00“”,
+                    “closetime”: “”24:00:00“”,
+                    “description”: “tempat ini mantap loh datanglah selagi sempat”,
+                }
         }
 
     404:
@@ -718,10 +735,65 @@
         }
 
 
-        
-#### url : localhost:99/place/:id_place/createmenu
+### Rate Place By id (POST /ratePlace/:id)
+
 **_Request (header): (required) authorization: Bearer <JWT_TOKEN>_**
-**_Request filetype : image_**
+
+#### url : localhost:99/place/ratePlace/:id
+
+**_Request (params) : (required) id => id_places _**
+
+**_Request (body): JSON_**
+
+    {
+        “rating” : 4.5,
+    }
+
+
+**_Response: JSON_**
+
+    200:
+        {
+            "success" : true,
+            "message" : `rating on place with id 1 has updated to 4.5`
+        } 
+
+    500:
+        {
+            “success”   : false,
+            “message”   : “internal server error”
+        }
+
+### Comment Place By id (POST /ratePlace/:id)
+
+**_Request (header): (required) authorization: Bearer <JWT_TOKEN>_**
+
+#### url : localhost:99/place/ratePlace/:id
+
+**_Request (params) : (required) id => id_places _**
+
+**_Request (body): JSON_**
+
+    {
+        “comment” : “ini adalah koment terbaik”,
+    }
+
+
+**_Response: JSON_**
+
+    200:
+        {
+            "success" : true,
+            "message" : "You have posted a comment on place with id 1"
+            
+        } 
+
+    500:
+        {
+            “success”   : false,
+            “message”   : “internal server error”
+        }
+        
 
 
 ## Menu (/place)
@@ -730,7 +802,11 @@
 
 #### url : localhost:99/place/:id_place/createmenu
 
-**_Request (params) : (required) id_place => id_places_**
+#### url : localhost:99/place/:id_place/createmenu
+
+**_Request (header): (required) authorization: Bearer <ADMIN_TOKEN>_**
+
+**_Request (params) : (required) id_place => place_id_**
 
 **_Request (body): JSON_**
 
