@@ -124,7 +124,7 @@
 
 **_Response: JSON_**
 
-    202 :
+    200 :
         {
             “success” : true,
             “token” : “12c312c039n089qc0sa”,
@@ -133,7 +133,7 @@
         }
 
     or  
-    202 :
+    200 :
         {
             “success” : true,
             “token” : “12c312c039n089qc0sa”,
@@ -142,7 +142,7 @@
         }
     
     or
-    202 :
+    200 :
         {
             “success” : true,
             “token” : “12c312c039n089qc0sa”,
@@ -173,6 +173,8 @@
         }
 
 ### Update User (POST /:id/update)
+
+**_Request (header): (required) authorization: Bearer <JWT_TOKEN>_**
 
 #### url : localhost:99/user/:id/update
 
@@ -235,6 +237,8 @@
 
 ### Change User Password (POST /:id/update)
 
+**_Request (header): (required) authorization: Bearer <JWT_TOKEN>_**
+
 #### url : localhost:99/user/:id/update
 
 **_Request (params) : (required) id_**
@@ -248,7 +252,7 @@
 
 **_Response: JSON_**
 
-    202:
+    200:
     {
         “success”: true,
         “message”: “Update password success”
@@ -329,6 +333,8 @@
 
 ### Delete User (POST /:id/delete)
 
+**_Request (header): (required) authorization: Bearer <JWT_TOKEN>_**
+
 #### url : localhost:99/user/:id
 
 **_Request (params) : (required) id_**
@@ -366,6 +372,8 @@
 
 ### Register Admin (POST /registerAdmin)
 
+**_Request (header): (required) authorization: Bearer <ADMIN_TOKEN>_**
+
 #### url : localhost:99/Admin/registerAdmin
 
 **_Request (body): JSON_**
@@ -398,11 +406,245 @@
             “message”   : “internal server error”
         }
 
+
+### Delete Users By admin (POST /:id/delete)
+
+**_Request (header): (required) authorization: Bearer <ADMIN_TOKEN>_**
+
+#### url : localhost:99/user/:id
+
+**_Request (params) : (required) id_**
+
+**_Request (body): JSON_**
+
+    {
+        “email”     : “kuykulinerin@gmail.com”,
+        “Phone”     : “085340907028”,
+    }
+
+**_Response: JSON_**
+
+    200:
+        {
+            "success" : true,
+            "Message" : "Delete users success"
+        }
+
+    403:
+        {
+            “success”   : false,
+            “message”   : “You have no right to do that”
+        }
+
+    404:
+        {
+            “success”   : false,
+            “message”   : “User not found”
+        }
+
+
+    500:
+        {
+            “success”   : false,
+            “message”   : “internal server error”
+        }
+
+
 ## Place (/place)
 
-## Create Place
+## Search Place (POST /searchplace)
 
-**_Request (header): (required) Authorization: Bearer <JWT_TOKEN>_**
+#### url : localhost:99/place/searchplace
+
+**_Request (body): JSON_**
+
+    {
+        “input” : “rating”,
+        “order” : “ASC”,
+        “keyword” : “makan”,
+        “coworking” : 1,
+        “restaurant” : 1,
+        “cafe” : 1
+    }
+
+**_Response: JSON_**
+
+    200:
+        {
+            "success" : true,
+            "data": [
+                    {
+                        "id": 1,
+                        "location": "makanan enak",
+                        "lowprice": 100000,
+                        "highprice": 50000,
+                        "opentime": "06:00:00",
+                        "closetime": "24:00:00",
+                        "image": "PlaceImage-CA9vKnVP.png",
+                        "rating": 3.5
+                    }
+                    {
+                        "id": 2,
+                        "location": "makanan enak",
+                        "lowprice": 100000,
+                        "highprice": 50000,
+                        "opentime": "06:00:00",
+                        "closetime": "24:00:00",
+                        "image": "PlaceImage-CA9vKnVP.png",
+                        "rating": 4.5
+                    }
+                    {
+                        "id": 3,
+                        "location": "makanan enak",
+                        "lowprice": 100000,
+                        "highprice": 50000,
+                        "opentime": "06:00:00",
+                        "closetime": "24:00:00",
+                        "image": "PlaceImage-CA9vKnVP.png",
+                        "rating": 5
+                    }
+            ]
+        }
+
+    500:
+        {
+            “success”   : false,
+            “message”   : “internal server error”
+        }
+
+## Get Place for home (GET /)
+
+#### url : localhost:99/place
+
+**_Response: JSON_**
+
+    200:
+        {
+            "success" : true,
+            "data": [
+                    {
+                        "id": 1,
+                        "location": "makanan enak",
+                        "lowprice": 100000,
+                        "highprice": 50000,
+                        "opentime": "06:00:00",
+                        "closetime": "24:00:00",
+                        "image": "PlaceImage-CA9vKnVP.png",
+                        "rating": 3.5
+                    }
+                    {
+                        "id": 2,
+                        "location": "makanan enak",
+                        "lowprice": 100000,
+                        "highprice": 50000,
+                        "opentime": "06:00:00",
+                        "closetime": "24:00:00",
+                        "image": "PlaceImage-CA9vKnVP.png",
+                        "rating": 4.5
+                    }
+                    {
+                        "id": 3,
+                        "location": "makanan enak",
+                        "lowprice": 100000,
+                        "highprice": 50000,
+                        "opentime": "06:00:00",
+                        "closetime": "24:00:00",
+                        "image": "PlaceImage-CA9vKnVP.png",
+                        "rating": 5
+                    }
+                ]
+                "data2": [
+                    {
+                        "id": 3,
+                        "location": "makanan enak",
+                        "lowprice": 100000,
+                        "highprice": 50000,
+                        "opentime": "06:00:00",
+                        "closetime": "24:00:00",
+                        "image": "PlaceImage-CA9vKnVP.png",
+                        "rating": 2.5
+                    }
+                    {
+                        "id": 10,
+                        "location": "makanan enak",
+                        "lowprice": 100000,
+                        "highprice": 50000,
+                        "opentime": "06:00:00",
+                        "closetime": "24:00:00",
+                        "image": "PlaceImage-CA9vKnVP.png",
+                        "rating": 4.5
+                    }
+                    {
+                        "id": 1,
+                        "location": "makanan enak",
+                        "lowprice": 100000,
+                        "highprice": 50000,
+                        "opentime": "06:00:00",
+                        "closetime": "24:00:00",
+                        "image": "PlaceImage-CA9vKnVP.png",
+                        "rating": 5
+                    }
+            ]
+        }
+
+    500:
+        {
+            “success”   : false,
+            “message”   : “internal server error”
+        }
+
+## Search Place (POST /createplace)
+
+#### url : localhost:99/place/createplace
+
+**_Request (body): MULTIPART_**
+    
+    myFile = images.png
+    
+    {
+        “nama” : “Bakso Damas”,
+        “rating” : 4.5,
+        “coworking” : 1,
+        “restaurant” : 1,
+        “cafe” : 1
+        “googlemap” : “https://www.google.com/maps/place/Bakso+Damas/@-7.952639,112.6079458,15z/data=!4m5!3m4!1s0x2dd629e12fb08173:0x40ea6973b3979085!8m2!3d-7.9384615!4d112.625294”,
+        “location” : “Jl. Soekarno - Hatta No.75-74, Mojolangu, Kec. Lowokwaru, Kota Malang, Jawa Timur 65142”,
+        “opentime”: “”06:00:00“”,
+        “closetime”: “”24:00:00“”,
+        “description”: “tempat ini mantap loh datanglah selagi sempat”,
+
+    }
+
+**_Response: JSON_**
+
+    200:
+        {
+            "success" : "true",
+                    "message" : "berhasil upload",
+                    status: "File Uploaded Successfully", 
+                    filename: "images.png" 
+        }
+    
+    or
+    200:
+        {
+            "success" : "true",
+                    "message" : "berhasil upload",
+                    status: "File Upload Failed", 
+                    filename: "images.png" 
+        }
+
+    500:
+        {
+            “success”   : false,
+            “message”   : “internal server error”
+        }
+
+        
+#### url : localhost:99/place/:id_place/createmenu
+**_Request (header): (required) authorization: Bearer <JWT_TOKEN>_**
+**_Request filetype : image_**
+
 
 ## Menu (/place)
 

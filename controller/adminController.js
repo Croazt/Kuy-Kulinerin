@@ -34,10 +34,7 @@ module.exports = {
     },
 
     deleteUsers :  async (req,res,next)=>{
-        const username = req.body.username;
-        const superadmin = req.user.superadmin;
-        const role = req.user.role;
-        const users = req.user.username;
+        const {username,superadmin,role,users} =req.user
         const email = req.body.email;
         const phone = req.body.phone;
         const [rows] = await db.query('select id, nama, email, username, phone, role from users where username = ? and email = ? and phone = ?',[username, email, phone])

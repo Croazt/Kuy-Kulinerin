@@ -122,7 +122,6 @@ module.exports={
             })
         }
         catch(err){
-            console.log(err)
             next(err)
         }
     },   
@@ -158,10 +157,8 @@ module.exports={
                         "message" : "Place with id = "+ id +" has been deleted"
                     })
                 })
-                .catch(()=>{
-                    res.status(404)
-                    const error = new Error("Place Not Found")
-                    next(error)              
+                .catch((err)=>{
+                    next(err)              
                 })
             }else if(role === 2){
                 if(id_users === user_id){
@@ -172,10 +169,8 @@ module.exports={
                             "message" : "Place with id = "+ id +" and id_users = "+id_users+" has been deleted"
                         })
                     })
-                    .catch(()=>{
-                        res.status(404)
-                        const error = new Error("Place Not Found")
-                        next(error)              
+                    .catch((err)=>{
+                        next(err)              
                     })
                 }else{
                     res.status(403)

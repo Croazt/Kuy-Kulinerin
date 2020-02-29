@@ -162,7 +162,7 @@ const changePassword = async (req, res, next) => {
         const hashedPassword = await bcrypt.hash(newPassword, 11);
         db.query("update users set password = ?", [hashedPassword])
           .then(() => {
-            res.status(202).json({
+            res.status(200).json({
               success: true,
               message: "Update password success"
             });
@@ -221,7 +221,7 @@ const delUser = async (req, res, next) => {
     if (username === id) {
       db.query("delete from user where username = ?", [username])
         .then(() => {
-          res.status(202).json({
+          res.status(200).json({
             Success: true,
             Message: "Delete users success"
           });

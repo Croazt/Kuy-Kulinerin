@@ -75,7 +75,7 @@ const login2 = async (req,res,next)=>{
             console.log("wrong token")
         }
         if (token) {
-            res.status(202).json({
+            res.status(200).json({
                 "success": true,
                 "token": token,
                 "message" : admin
