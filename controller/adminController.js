@@ -59,7 +59,6 @@ module.exports = {
                     })
                 })
                 .catch((err)=>{
-                    const error = new Error("Something wrong")
                     next(err)
                 })
             }

@@ -5,6 +5,7 @@ module.exports={
         return (req,res,next) =>{
             const result = joi.validate(req.body, schema)
             if(result.error){
+                console.log(result.error)
                 return res.status(400).json(result.error)
             }
             if(!req.value){
@@ -19,10 +20,30 @@ module.exports={
     schemas : {
         authSchema : joi.object().keys({
             email : joi.string().email().required(),
-            password :  joi.string().alphanum().required(),
+            password :  joi.string().alphanum().required().min(8),
             phone : joi.string().regex(/^[0-9]{3,30}$/).required(),
             username : joi.string().alphanum().required().min(3).max(40).required(),
             nama : joi.string().min(3).max(40).required()
+        }),
+        authSchemaGoogle : joi.object().keys({
+            username : joi.string().alphanum().required().min(8).max(40).required(),
+            password :  joi.string().alphanum().required().min(8)
         })
-    }
+    },
+
+    validateBodyGoogle : (schema) =>{
+        return (req,res,next) =>{
+            const result = joi.validate(req.body, schema)
+            if(result.error){
+                console.log(result.error)
+                return res.status(400).json(result.error)
+            }
+            if(!req.value){
+                req.value = {}
+            }
+            req.value['body'] = result.value
+            //req.value.body instead req.body
+            next();
+        }
+    },
 }

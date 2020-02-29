@@ -6,13 +6,15 @@ const menuRouter = require('./menuRouter')
 const sellerRouter = require('./sellerRouter')
 const imageRouter = require('./imageRouter')
 const transactionRouter = require('./transactionRouter')
-const googleRouter = require('./googleRouter')
+const oAuthRouter = require('./oAuthRouter')
+// const googleRouter = require('./googleRouter')
 
 router.get('/', (req,res)=>{
     res.send('Fachry Lolos BCC');
 })
 
 // router.use('/google',googleRouter)
+router.use('/auth',oAuthRouter)
 router.use('/user',userRouter)
 router.use('/transaction',transactionRouter)
 router.use('/place',placeRouter)

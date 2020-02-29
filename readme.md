@@ -1,7 +1,9 @@
 # API CONTRACT
 
 # MODEL
+
 ## User
+
 - id: Int
 - nama: String
 - email: String
@@ -9,9 +11,13 @@
 - password: String
 - phone : String
 - role : Int
-
+- superadmin : int
+- balance : Bigint
+- tempBalance : Bigint
+- googleId : string
 
 ## Place
+
 - id: Int
 - nama : String
 - Location : String
@@ -21,7 +27,7 @@
 - googlemap : String
 - lowprice : int
 - highprice : int
-- opentime : time 
+- opentime : time
 - closetime : time
 - description : String
 - image : String
@@ -29,6 +35,7 @@
 - recomended : int
 
 ## Admin
+
 - id: Int
 - nama: String
 - email: String
@@ -38,100 +45,140 @@
 - role : Int
 
 ## Menu
+
 - id : Int
 - id_places : Int
 - nama : String
 - harga : BIGINT
 
 # ENDPOINT
+
 ## User (/user)
 
 ### Register User (POST /register)
+
 #### url : localhost:99/user/register
-***Request (body): JSON***
+
+**_Request (body): JSON_**
 
     {
         “name”      : “Muhammad Fachry Noorchoolish Arif”,
         “email”     : “kuykulinerin@gmail.com”,
         “username”  : “Croazt”,
-        “Phone”     : “085340907028”,
+        “phone”     : “085340907028”,
         “password”  : “Yoimen99”
     }
 
-***Response: JSON***
+**_Response: JSON_**
 
     200:
         {
             “success”   : true,
-            “message”   : “registesuccess”
+            “message”   : “verify link has been sent to your email”
         }
 
-    409:    
+    406:
         {
             “success”   : false,
             “message”   : “Email already registered”
-        } 
+        }
 
-    500:    
+    400:
+        {
+            "isJoi": true,
+            "name": "ValidationError",
+            "details": [
+                    {
+                    "message": "\"email\" must be a valid email",
+                    "path": [
+                        "email"
+                    ],
+                    "type": "string.email",
+                    "context": {
+                        "value": "WWOKEgmail.com",
+                        "key": "email",
+                        "label": "email"
+                    }
+                }
+            ],
+        }
+
+
+    500:
         {
             “success”   : false,
             “message”   : “internal server error”
         }
 
 ### Login User (POST /login)
-#### url : localhost:99/user/login
-***Request (Body): JSON***
 
-            
+#### url : localhost:99/user/login
+
+**_Request (Body): JSON_**
+
     {
         “email”     : “kuykulinerin@gmail.com”,
         “username”  : “Croazt”,
         "password”  : “Yoimen33”
     }
 
-***Response: JSON***
-    
+**_Response: JSON_**
+
     202 :
-    {
-        “success” : true,
-        “token” : “12c312c039n089qc0sa”,
-        “message” : “YOU LOGIN AS USER”
-        
-    }
+        {
+            “success” : true,
+            “token” : “12c312c039n089qc0sa”,
+            “message” : “YOU LOGIN AS USER”
+
+        }
+
+    or  
+    202 :
+        {
+            “success” : true,
+            “token” : “12c312c039n089qc0sa”,
+            “message” : “YOU LOGIN AS ADMIN”
+
+        }
+    
     or
     202 :
-    {
-        “success” : true,
-        “token” : “12c312c039n089qc0sa”,
-        “message” : “YOU LOGIN AS ADMIN”
-        
-    }
-    
+        {
+            “success” : true,
+            “token” : “12c312c039n089qc0sa”,
+            “message” : “YOU LOGIN AS SELLER”
+
+        }       
+
     403:
-    {
-        “success” : false,
-        “message” : “Wrong username or password”
-    }
-    
-    409:     
-    {
-        “success”: false,
-        “message”: “It seems u have not registered yet”
-    }
+        {
+            “success” : false,
+            “message” : “Wrong username or password”
+        }   
+
+    406:  
+        {
+            “success”: false,
+            “message”: “It seems you have not registered yet”
+        }
     412
-    {
-        “success”: false,
-        “message”: “Please input valid email or username”
-    }
-    500:    
-    {
+        {
+            “success”: false,
+            “message”: “Please input valid email or username”   
+        }
+    500:  
+        {
             “success” : false,
             “message” : “internal server error”
-    }
-    
+        }
+
 ### Update User (POST /:id/update)
+
 #### url : localhost:99/user/:id/update
-***Request (body): JSON***
+
+**_Request (params) : (required) id_**
+
+**_Request (body): JSON_**
 
     {
         “nama”     : “AYOLAH”,
@@ -139,37 +186,119 @@
         “email”     : “kuykulinerin@gmail.com”,
         “phone”  : “085340907028”,
     }
-    
-***Response: JSON***
 
-    202:         
-    {
-        “success”: true,
-        “message”: “Update success”
-    }
+**_Response: JSON_**
 
-    409:    
-    {
-        “success”: false,
-        “message”: “Not valid email”
-    }
+        201:
+        {
+            “success”: true,
+            “message”: “Update success”
+        }
 
-    410:
+        400:
+        {
+            "isJoi": true,
+            "name": "ValidationError",
+            "details": [
+                    {
+                        "message": "\"email\" must be a valid email",
+                        "path": [
+                            "email"
+                        ],
+                        "type": "string.email",
+                        "context": {
+                            "value": "WWOKEgmail.com",
+                            "key": "email",
+                            "label": "email"
+                    }
+                }
+            ],
+        }
+
+    412:
     {
         “success”: false
-        “message”: “You are not recognized as %{id}” 
+        “message”: “Password didn't match”
+    }
+
+    401:
+    {
+        “success”: false
+        “message”: “You are not recognized as %{id}”
     }
 
     500:
     {
-        “success” : false,             
+        “success” : false,
+        “message” : “internal server error”
+    }
+
+### Change User Password (POST /:id/update)
+
+#### url : localhost:99/user/:id/update
+
+**_Request (params) : (required) id_**
+
+**_Request (body): JSON_**
+
+    {
+        “password”     : “ApaAjaBoleh”,
+        “newPassword”  : “Bolehlah”,
+    }
+
+**_Response: JSON_**
+
+    202:
+    {
+        “success”: true,
+        “message”: “Update password success”
+    }
+
+    400:
+    {
+        "isJoi": true,
+        "name": "ValidationError",
+        "details": [
+                {
+                    "message": "\"email\" must be a valid email",
+                    "path": [
+                        "email"
+                    ],
+                    "type": "string.email",
+                    "context": {
+                        "value": "WWOKEgmail.com",
+                        "key": "email",
+                        "label": "email"
+                }
+            }
+        ],
+    }
+
+    404:
+    {
+        “success”: false
+        “message”: “You are not recognized as %{id}”
+    }
+
+    401:
+    {
+        “success”: false
+        “message”: “You are not recognized as %{id}”
+    }
+
+    500:
+    {
+        “success” : false,
         “message” : “internal server error”
     }
 
 ### Get User (POST /:id)
+
 #### url : localhost:99/user/:id
 
-***Response: JSON***
+**_Request (params) : (required) id_**
+
+**_Response: JSON_**
 
     200:
         {
@@ -181,21 +310,65 @@
                         “username”: “Croazt”,
                         “email”: “ayaiayai@gmail.com”,
                         “phone”: “085340907028”,
+                        “balance”: “18399231978172391”,
                     }
                 ]
         }
 
-    500:    
+    404:
+        {
+            “success”   : false,
+            “message”   : “User not found”
+        }
+
+    500:
         {
             “success”   : false,
             “message”   : “internal server error”
         }
 
+### Delete User (POST /:id/delete)
+
+#### url : localhost:99/user/:id
+
+**_Request (params) : (required) id_**
+
+**_Response: JSON_**
+
+    200:
+        {
+            "success" : true,
+            "Message" : "Delete users success"
+        }
+
+    403:
+        {
+            “success”   : false,
+            “message”   : “You have no right to do that”
+        }
+
+    404:
+        {
+            “success”   : false,
+            “message”   : “User not found”
+        }
+
+
+    500:
+        {
+            “success”   : false,
+            “message”   : “internal server error”
+        }
+
+
+
 ## Admin (/Admin)
 
 ### Register Admin (POST /registerAdmin)
+
 #### url : localhost:99/Admin/registerAdmin
-***Request (body): JSON***
+
+**_Request (body): JSON_**
 
     {
         “name”      : “Muhammad Fachry Noorchoolish Arif”,
@@ -205,7 +378,7 @@
         “password”  : “Yoimen99”
     }
 
-***Response: JSON***
+**_Response: JSON_**
 
     200:
         {
@@ -213,37 +386,40 @@
             “message”   : “registesuccess”
         }
 
-    409:    
+    409:
         {
             “success”   : false,
             “message”   : “Email already registered”
-        } 
+        }
 
-    500:    
+    500:
         {
             “success”   : false,
             “message”   : “internal server error”
         }
 
 ## Place (/place)
+
 ## Create Place
 
-***Request (header): (required) Authorization: Bearer <JWT_TOKEN>***
+**_Request (header): (required) Authorization: Bearer <JWT_TOKEN>_**
 
 ## Menu (/place)
 
 ### Create Menu (POST /:id_place/createmenu)
+
 #### url : localhost:99/place/:id_place/createmenu
 
-***Request (params) : (required) id_place => id_places***
-***Request (body): JSON***
+**_Request (params) : (required) id_place => id_places_**
+
+**_Request (body): JSON_**
 
     {
         “nama” : “Makanan Enak Yuhuu”,
         “harga”   :  100000
     }
 
-***Response: JSON***
+**_Response: JSON_**
 
     200:
         {
@@ -251,22 +427,24 @@
             "message" : "Register success"
         }
 
-    500:    
+    500:
         {
             “success”   : false,
             “message”   : “internal server error”
         }
 
 ### Update Menu (POST /:id_place/menu/:id/update)
+
 #### url : localhost:99/place/:id_place/menu/:id/update
-***Request (body): JSON***
+
+**_Request (body): JSON_**
 
     {
         “nama” : “Makanan Enak Yuhuu”,
         “harga”   :  100000
     }
 
-***Response: JSON***
+**_Response: JSON_**
 
     200:
         {
@@ -274,16 +452,17 @@
             "message" : "Update success"
         }
 
-    500:    
+    500:
         {
             “success”   : false,
             “message”   : “internal server error”
         }
 
 ### Get All Menu Menu (POST /:id_place/menu/)
+
 #### url : localhost:99/place/:id_place/menu/
 
-***Response: JSON***
+**_Response: JSON_**
 
     200:
         {
@@ -299,12 +478,11 @@
                         “nama”: “Makanan Enak Yuhuu”,
                         “harga”: 100000
                     }
-                ] 
+                ]
         }
 
-    500:    
+    500:
         {
             “success”   : false,
             “message”   : “internal server error”
         }
-

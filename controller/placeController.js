@@ -31,7 +31,7 @@ module.exports={
         const coworking = req.body.coworking;
         const restaurant = req.body.restaurant;
         const cafe = req.body.cafe;
-        const image = "resource/image/"+filename;
+        const image = filename;
         const googlemap = req.body.googlemap;
         const lowprice =req.body.lowprice;
         const highprice =req.body.highprice;
@@ -146,17 +146,16 @@ module.exports={
     delPlaceByid : async (req,res,next)=>{
         const user_id = req.user.username
         const id = req.params.id;
-        const id_users = req.params.id_user
         const role = req.user.role
         console.log(user_id)
         const [rows] = await db.query('select * from places where id = ?',[id])
         if(rows.length != 0){
             if(role === 0){
-                db.query('delete from places where id = ? and id_users = ?',[id,id_users])
+                db.query('delete from places where id = ? and id_users = ?',[id])
                 .then(()=>{
                     res.json({
                         "success" : true,
-                        "message" : "Place with id = "+ id +" and id_users = "+id_users+" has been deleted"
+                        "message" : "Place with id = "+ id +" has been deleted"
                     })
                 })
                 .catch(()=>{
@@ -192,5 +191,54 @@ module.exports={
             next(error)
         }
     },
-    
+
+    ratePlace : async (req,res,next)=>{
+        const {username} = req.user
+        const id_places = req.params.id
+        const rating = req.body.rating
+        var [rows] = await db.query('select * from ratings where id_users = ? and id_places = ?',[username,id_places])
+        if(rows.length !== 0){
+            await db.query('update ratings set userRating = ? where id_users = ? and id_places = ?',[rating,username,id_places]);
+            [rows] = await db.query('select AVG(userRating) as  avgRating from (select * from ratings where id_users = ? and id_places = ?) as lim group by userRating',[username,id_places,])
+            db.query('update places set rating = ? where id = ?',[rows[0].avgRating,id_places])
+            .then(()=>{
+                res.status(201).json({
+                    "success" : true,
+                    "message" : `rating on place with id ${id_places} has updated to ${rows[0].avgRating}`
+                })
+            })
+            .catch((err)=>{
+                next(err)
+            })
+        }else{
+            await db.query('insert into ratings(userRating,id_users,id_places) value (?,?,?)' ,[rating,username,id_places]);
+            [rows] = await db.query('select AVG(userRating) as  avgRating from (select * from ratings where id_users = ? and id_places = ?) as lim group by userRating',[username,id_places,])
+            db.query('update places set rating = ? where id = ?',[rows[0].avgRating,id_places])
+            .then(()=>{
+                res.status(201).json({
+                    "success" : true,
+                    "message" : `rating on place with id ${id_places} has updated to ${rows[0].avgRating}`
+                })
+            })
+            .catch((err)=>{
+                next(err)
+            })
+        }
+    },
+
+    commentPlace : async (req,res,next)=>{
+        const {username} = req.user
+        const id_places = req.params.id
+        const comment = req.body.comment
+            db.query('insert into comment(userComment,id_users,id_places) value (?,?,?)' ,[comment,username,id_places])
+            .then(()=>{
+                res.status(201).json({
+                    "success" : true,
+                    "message" : `You have posted a comment on place with id ${id_places}`
+                })
+            })
+            .catch((err)=>{
+                next(err)
+            })
+        }
 }

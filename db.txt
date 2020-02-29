@@ -36,8 +36,10 @@ create table `menus`(
   id INTEGER primary key auto_increment,
   id_places INTEGER not null,
   nama text not null,
+  id_users varchar(40) not null,
       price BIGINT not null,
-      FOREIGN KEY (id_places) REFERENCES places(id) on delete cascade
+      FOREIGN KEY (id_places) REFERENCES places(id) on delete cascade,
+      FOREIGN KEY (id_users) REFERENCES users(username) on delete cascade
  )
 
 create table `transactions`(
@@ -66,3 +68,36 @@ create table `details`(
     FOREIGN KEY (id_menu) REFERENCES menus(id) on delete cascade,
     FOREIGN KEY (id_transaction) REFERENCES transactions(id) on delete cascade
 )
+
+create table `ratings`(
+  id int primary key auto_increment,
+  id_users varchar(40) unique not null,
+  userRating double not null,
+  id_places int not null,
+  createdAt timestamp default CURRENT_TIMESTAMP,
+  updatedAt timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_places) REFERENCES places(id) on delete cascade,
+  FOREIGN KEY (id_users) REFERENCES users(username) on delete cascade
+)
+
+create table `comment`(
+  id int primary key auto_increment,
+  id_users varchar(40) unique not null,
+  userComment text not null,
+  id_places int not null,
+  createdAt timestamp default CURRENT_TIMESTAMP,
+  updatedAt timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_places) REFERENCES places(id) on delete cascade,
+  FOREIGN KEY (id_users) REFERENCES users(username) on delete cascade
+)
+
+CREATE EVENT cleaningTransaction ON SCHEDULE EVERY 2 MONTH ENABLE
+  DO 
+  DELETE FROM transactions
+  WHERE `createdAt` < CURRENT_TIMESTAMP - INTERVAL 4 MONTH
+
+
+CREATE EVENT cleaning ON SCHEDULE EVERY 5 DAYS ENABLE
+  DO 
+  DELETE FROM comment
+  WHERE `createdAt` < CURRENT_TIMESTAMP - INTERVAL 1 WEEK

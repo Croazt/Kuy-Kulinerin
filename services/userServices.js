@@ -50,7 +50,45 @@ const login = async (req,pass,res,next)=>{
     }
 }
 
+const login2 = async (req,res,next)=>{
+    const user = req
+        var payload = {
+            "id_user": user.id,
+            "email": user.email,
+            "username" : user.username,
+            "role" : user.role,
+            "superadmin" : user.superadmin
+        }
+            var token;
+            var admin = "YOU LOGIN AS USER"
+        if(user.role === 1){
+            token = await jwt.sign(payload, JWT_KEY)
+        }else if(user.role === 0 || user.role === 2){
+            token = await jwt.sign(payload, ADMIN_KEY)
+            if(user.role === 0){
+                admin = "YOU LOGIN AS ADMIN"
+            }else if(user.role === 2){
+                admin = "YOU LOGIN AS SELLER"
+            }
+            
+        }else{
+            console.log("wrong token")
+        }
+        if (token) {
+            res.status(202).json({
+                "success": true,
+                "token": token,
+                "message" : admin
+            })
+        } else {
+            res.status(406)
+            const error = new Error("JWT Error, cant create token")
+            next(error)
+        }
+}
+
 const userServices={
-    login
+    login,
+    login2
 } 
 module.exports = userServices
