@@ -593,7 +593,7 @@
             “message”   : “internal server error”
         }
 
-## Search Place (POST /createplace)
+## Create Place (POST /createplace)
 
 #### url : localhost:99/place/createplace
 
@@ -630,8 +630,13 @@
         {
             "success" : "true",
                     "message" : "berhasil upload",
-                    status: "File Upload Failed", 
+                    status: "File Upload Failed ", 
                     filename: "images.png" 
+        }
+    403:
+        {
+            “success”   : false,
+            “message”   : “YOU CANNOT ADD MORE PLACE ANYMORE”
         }
 
     500:
@@ -639,6 +644,44 @@
             “success”   : false,
             “message”   : “internal server error”
         }
+
+
+### Delete Place By admin (POST /deleteplace/:id)
+
+**_Request (header): (required) authorization: Bearer <ADMIN_TOKEN>_**
+
+#### url : localhost:99/place/deleteplace/:id
+
+**_Request (params) : (required) id_**
+
+**_Response: JSON_**
+
+    200:
+        {
+            "success" : true,
+            "Message" : "Place with id = "+ id +" has been deleted"
+        }
+
+    403:
+        {
+            “success”   : false,
+            “message”   : "You are not place owner"
+        }
+
+    404:
+        {
+            “success”   : false,
+            “message”   : “User not found”
+        }
+
+
+    500:
+        {
+            “success”   : false,
+            “message”   : “internal server error”
+        }
+
+        
 
         
 #### url : localhost:99/place/:id_place/createmenu
