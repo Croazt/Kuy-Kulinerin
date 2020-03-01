@@ -812,7 +812,7 @@
 
     {
         “nama” : “Makanan Enak Yuhuu”,
-        “harga”   :  100000
+        “harga”  :  100000
     }
 
 **_Response: JSON_**
@@ -823,6 +823,12 @@
             "message" : "Register success"
         }
 
+    400:
+        {
+            “success”   : false,
+            “message”   : “Place not found”
+        }
+
     500:
         {
             “success”   : false,
@@ -831,7 +837,9 @@
 
 ### Update Menu (POST /:id_place/menu/:id/update)
 
-#### url : localhost:99/place/:id_place/menu/:id/update
+#### url : localhost:99/place/:id_place/menu/:id/
+
+**_Request (params) : (required) id_place => place_id_**
 
 **_Request (body): JSON_**
 
@@ -846,6 +854,12 @@
         {
             "success" : true,
             "message" : "Update success"
+        }
+
+    400:
+        {
+            “success”   : false,
+            “message”   : “Menu not found”
         }
 
     500:

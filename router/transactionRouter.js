@@ -5,7 +5,7 @@ const { checkuser } = require('../middleware/')
 const { checkadmin } = require('../middleware/')
 
 router.post('/:id_places/reqmenu/:id_menu', checkuser, transactionController.createTrans)
-router.delete('/:id_places/reqmenu/:id_transaction', checkuser, transactionController.deleteDetails)
+router.delete('/:id_places/deletemenu/:id_transaction/:id_menu', checkuser, transactionController.deleteDetails)
 router.post('/:id_places/accept/:id_transaction', checkuser, transactionController.acceptTransaction)
 router.post('/:id_places/acceptSeller/:id_user/:id_transaction', checkadmin, transactionController.acceptTransactionSeller)
 router.post('/:id_places/ready/:id_user/:id_transaction', checkadmin, transactionController.bookingReady)

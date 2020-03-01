@@ -281,20 +281,6 @@ module.exports={
                     "error" : err
                 })
             })
-        }else if (rows.length != 0&& rows[0].accepted < 2){
-            db.query('delete from transactions where id = ? and id_places = ? and id_users = ?',[id_transaction,id_places,user])
-            .then(()=>{
-                res.status(202).json({
-                    "success" : true,
-                    "message" : "Transaction canceled"
-                })
-            })
-            .catch((err)=>{
-                res.status(500).json({
-                    "success" : false,
-                    "error" : err
-                })
-            })
         }else if (rows.length != 0&& rows[0].accepted > 1){
                 res.status(409)
                 const err = new Error("Transaction cannot canceled")
@@ -307,22 +293,42 @@ module.exports={
     },
 
     deleteDetails : async (req,res,next)=>{
-        const [rows] =  await db.query('select * from transactions where id_places = ? and id = ?')
-        await db.query('update details set jumlah = jumlah -  1, totalPrice  = price * jumlah where id_users = ? and id_places = ? and id_menu = ? and id_transaction',[id,id_places,id_menu,rows[0].id])
-        var [rows2] = await db.query('select SUM(totalPrice) as totalPrice from (select * from details where id_users = ? and id_places = ? and id_menu = ? and id_transaction = ?) as lim group by price',[id,id_places,id_menu,rows[0].id])
-        await db.query('update transactions set price = ? where id_users = ? and id_places = ? and accepted = 0',[rows[0].totalPrice,id,id_places])
-        .then(()=>{
-            res.json({
-                "success" : true,
-                "message" : "Add success"
-            })
-        })
-        .catch((err)=>{
-            res.status(500).json({
+        const id_places = req.params.id_places
+        const id_transaction = req.params.id_transaction
+        const id = req.user.username
+        const id_menu = req.params.id_menu
+        const [rows] =  await db.query('select * from transactions where id_places = ? and id = ?',[id_places,id_transaction])
+        console.log(id,id_menu,id_places,rows)
+        if(rows[0].accepted<2){
+            var [rows2] = await db.query('select * from details where id_users = ? and id_places = ? and id_menu = ? and id_transaction = ?',[id,id_places,id_menu,rows[0].id])
+            if(rows2.length!==0){
+                await db.query('update details set jumlah = jumlah -  1, totalPrice  = price * jumlah where id_users = ? and id_places = ? and id_menu = ? and id_transaction = ?',[id,id_places,id_menu,rows[0].id])
+                var [rows2] = await db.query('select SUM(totalPrice) as totalPrices from (select * from details where id_users = ? and id_places = ? and id_menu = ? and id_transaction = ?) as lim group by price',[id,id_places,id_menu,rows[0].id])
+                db.query('update transactions set price = ? where id_users = ? and id_places = ? and accepted = ?',[rows2[0].totalPrices,id,id_places,rows[0].accepted])
+                .then(()=>{
+                    res.json({
+                        "success" : true,
+                        "message" : "Add success"
+                    })
+                })
+                .catch((err)=>{
+                    res.status(500).json({
+                        "success" : false,
+                        "error" : err
+                    })
+                })
+            }else{
+                res.status(404).json({
+                    "success" : false,
+                    "Mesage" : `transaction not found by menu with id ${id_menu}`
+                })
+            }
+        }else{
+            res.status(403).json({
                 "success" : false,
-                "error" : err
+                "Mesage" : "Cannot update details that already accepted by seller"
             })
-        })
+        }
         
     },
     

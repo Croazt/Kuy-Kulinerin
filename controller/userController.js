@@ -20,7 +20,7 @@ signToken = user => {
       iat: new Date().getTime() / 1000
     },
     VERIF_KEY,
-    { expiresIn: "2days" }
+    { expiresIn: "2d" }
   );
 };
 
