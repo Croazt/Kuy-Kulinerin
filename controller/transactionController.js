@@ -301,14 +301,29 @@ module.exports={
         console.log(id,id_menu,id_places,rows)
         if(rows[0].accepted<2){
             var [rows2] = await db.query('select * from details where id_users = ? and id_places = ? and id_menu = ? and id_transaction = ?',[id,id_places,id_menu,rows[0].id])
-            if(rows2.length!==0){
+            if(rows2.length!==0&&rows2[0].jumlah>1){
                 await db.query('update details set jumlah = jumlah -  1, totalPrice  = price * jumlah where id_users = ? and id_places = ? and id_menu = ? and id_transaction = ?',[id,id_places,id_menu,rows[0].id])
                 var [rows2] = await db.query('select SUM(totalPrice) as totalPrices from (select * from details where id_users = ? and id_places = ? and id_menu = ? and id_transaction = ?) as lim group by price',[id,id_places,id_menu,rows[0].id])
                 db.query('update transactions set price = ? where id_users = ? and id_places = ? and accepted = ?',[rows2[0].totalPrices,id,id_places,rows[0].accepted])
                 .then(()=>{
                     res.json({
                         "success" : true,
-                        "message" : "Add success"
+                        "message" : "Delete success"
+                    })
+                })
+                .catch((err)=>{
+                    res.status(500).json({
+                        "success" : false,
+                        "error" : err
+                    })
+                })
+            }else if(rows2.length!==0&&rows2[0].jumlah<=1){
+                await db.query('delete from details where id_users = ? and id_places = ? and id_menu = ? and id_transaction = ?',[id,id_places,id_menu,rows[0].id])
+                db.query('update transactions set price = ? where id_users = ? and id_places = ? and accepted = ?',[0,id,id_places,rows[0].accepted])
+                .then(()=>{
+                    res.json({
+                        "success" : true,
+                        "message" : "Delete success"
                     })
                 })
                 .catch((err)=>{

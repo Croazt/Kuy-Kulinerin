@@ -160,7 +160,7 @@ const changePassword = async (req, res, next) => {
       const isVerified = await bcrypt.compare(password, rows[0].password);
       if (isVerified) {
         const hashedPassword = await bcrypt.hash(newPassword, 11);
-        db.query("update users set password = ?", [hashedPassword])
+        db.query("update users set password = ? where username = ?", [hashedPassword,id_user])
           .then(() => {
             res.status(200).json({
               success: true,
